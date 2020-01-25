@@ -1,0 +1,40 @@
+{
+    "AWSEBDockerrunVersion": 2,
+    "containerDefinitions": [
+        {
+          "name": "worker",
+          "image": "svvone/multi-worker1",
+          "hostname": "worker",
+          "essential": false,
+          "memory": 64
+        },
+        {
+            "name": "client",
+            "image": "svvone/multi-client1",
+            "hostname": "client",
+            "essential": false,
+            "memory": 64
+        },
+        {
+            "name": "server",
+            "image": "svvone/multi-worker1",
+            "hostname": "api",
+            "essential": false,
+            "memory": 64
+        },
+        {
+            "name": "nginx",
+            "image": "svvone/multi-nginx1",
+            "hostname": "nginx",
+            "essential": true,
+            "memory": 64,
+            "portMappings": [
+                {
+                  "hostPort": 80,
+                  "containerPort": 80
+                }
+            ],
+            "links": ["server", "client"]
+          }
+    ]
+}
