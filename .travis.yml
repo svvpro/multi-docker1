@@ -1,0 +1,18 @@
+language: genaric
+sudo: required
+services:
+    - docker
+before_install: 
+    - docker build -t svvone/multi-test -f ./client/Dockerfile
+script:
+    - docker run -e CI=true svvone/multi-test npm test
+after_success:
+    - docker build -t svvone/multi-nginx1 -f ./nginx/Dockerfile
+    - docker build -t svvone/multi-client1 -f ./client/Dockerfile
+    - docker build -t svvone/multi-server1 -f ./server/Dockerfile
+    - docker build -t svvone/multi-worker1 -f ./worker/Dockerfile
+    - echo "$DOCKER_PASS" | docker login -u "$DOCKER_ID" --password-stdin
+    - docker push svvone/multi-nginx1
+    - docker push svvone/multi-client1
+    - docker push svvone/multi-server1
+    - docker push svvone/multi-worker1
